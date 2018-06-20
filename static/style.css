@@ -4,7 +4,7 @@
 .content {
     margin: 3% 15%;
 }
-.social-media {
+.sm {
     padding: 20px 0px 0px 0px;
     margin-left: 0px;
     max-width: 300px;
@@ -12,17 +12,14 @@
     overflow: hidden;
 }
 
-li.nav-item.active{
-    border-bottom: solid #000000 2px;
-}
 
-.social-media li {
+.sm li {
     float: left;
     padding-right: 20px;
     font-weight: 100;
     color: #959595;
 }
-.social-media li i {
+.sm li i {
     color: #555555;
     margin: 0 10px 0 5px;
 }
