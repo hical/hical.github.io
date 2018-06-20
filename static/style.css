@@ -1,0 +1,60 @@
+.navbar-container {
+    margin: 2% 12%;
+}
+.content {
+    margin: 3% 15%;
+}
+.social-media {
+    padding: 20px 0px 0px 0px;
+    margin-left: 0px;
+    max-width: 300px;
+    border-top: 1px solid #e2e2e2;
+    overflow: hidden;
+}
+
+li.nav-item.active{
+    border-bottom: solid #000000 2px;
+}
+
+.social-media li {
+    float: left;
+    padding-right: 20px;
+    font-weight: 100;
+    color: #959595;
+}
+.social-media li i {
+    color: #555555;
+    margin: 0 10px 0 5px;
+}
+h1, h2, h3, h4, h5, h6, p, blockquote, pre, ul, ol, dl, figure {
+    margin-bottom: 15px;
+}
+ol, ul {
+    list-style: none;
+}
+
+.copy {
+    font-weight: 100;
+    font-size: small;
+    color: #a0a0a0;
+}
+a:hover{
+    text-decoration: none;
+}
+p{
+    font-weight: 100;
+    font-size: 18px;
+    line-height: 1.5em;
+    color: #555555;
+}
+.navbar-brand {
+    color: #555555;
+}
+
+.project {
+    margin-bottom: 50px;
+}
+
+.blog {
+    margin-bottom: 50px;
+}
