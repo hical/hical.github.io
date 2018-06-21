@@ -26,10 +26,36 @@
 h1, h2, h3, h4, h5, h6, p, blockquote, pre, ul, ol, dl, figure {
     margin-bottom: 15px;
 }
-ol, ul {
-    list-style: none;
+
+.alert-primary {
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
 }
 
+.m-0 {
+    margin: 0;
+}
+
+h4 {
+    color: #2a2a2a;
+}
+
+ol, ul {
+}
+
+.gray-background {
+    background-color: #f7f7f7;
+}
+
+.border {
+    border: 1px solid #f5f5f5;
+}
+
+pre {
+    background-color: #f6f6f6;
+    padding: 0 15px;
+}
 .copy {
     font-weight: 100;
     font-size: small;
@@ -38,9 +64,18 @@ ol, ul {
 a:hover{
     text-decoration: none;
 }
+
+.code-inline {
+    padding: 0.2em 0.4em;
+    margin: 0;
+    background-color: rgba(27,31,35,0.05);
+    border-radius: 3px;
+    font-family: Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
+}
+
 p{
     font-weight: 100;
-    font-size: 18px;
+    font-size: 16px;
     line-height: 1.5em;
     color: #555555;
 }
