@@ -28,13 +28,13 @@
             <div class="navbar-toggler-right" id="navbarText">
                 <ul class="navbar-nav mr-auto mb-3">
                     <li class="nav-item">
-                        <a class="nav-link" href="index.html">How to</a>
+                        <a class="nav-link" href="index.html">Install</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="usage.html">Usage</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Documentation<span class="sr-only">(current)</span></a>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">Documentation<span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="paper.html">Paper</a>
@@ -370,9 +370,9 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 </code>
 </pre>
 
-<p>The method get_ajax will be called from our template to retrieve a list of documents. The variable docs_ids contains the list of documents ids that we need to retrieve their content. We put all functions associated with the component retrieval in <code>/interfaces</code> directory.</p>
+<p>The method <code>get_ajax</code> will be called from our template to retrieve a list of documents. The variable <code>docs_ids</code> contains the list of documents ids that we need to retrieve their content. We put all functions associated with the component retrieval in <code>/interfaces</code> directory.</p>
 
-<p>The variable documents will contain a list of documents with their content, in the following format:</p>
+<p>The variable <code>documents</code> will contain a list of documents with their content, in the following format:</p>
 
 <pre>
 <code>
@@ -388,17 +388,17 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 </code>
 </pre>
 
-<p>documents will be passed as context to our template, and loaded in the browser.</p>
+<p><code>documents</code> will be passed as context to our template, and loaded in the browser.</p>
 
 <p>The HTML associated is under <code>iterative/templates/iterative/iterative.html</code>. The <code>HomePageView</code> view, which the url pattern <code>/iterative/^</code> is pointing to, will render this page. If you look at the <code>HomePageView</code> view, you will see that <code>template_name = 'iterative/iterative.html'</code>.</p>
 
-<p>You can modify the iterative.html as you like. The <code>iterative.html</code> file will call <code>iterative:get_docs</code> once the page is loaded. You can customize the behaviour by modifying the javascript code in <code>iterative.html</code> to meet your needs.</p>
+<p>You can modify the <code>iterative.html</code> as you like. The <code>iterative.html</code> page will call <code>iterative:get_docs</code> url once the page is loaded. You can customize the behaviour by modifying the javascript code in <code>iterative.html</code> to meet your needs.</p>
 
-<p>The judgment buttons in the interface will call the <code>send_judgment()</code> function, which will send a call to the url <code>judgment:post_judgment</code> in <code>judgments/url.py</code> and run the view <code>JudgmentAJAXView</code>, which will save the document judgment to the database. If you would like to include more information to be saved with each judgment, you can modify the <code>send_judgment()</code> in <code>iterative.html</code>. You will also need to modify the database model, Judgement, associated with each judgment instance. The Judgement class is located in <code>judgment/models.py</code>.</p>
+<p>The judgment buttons in the interface will call the <code>send_judgment()</code> function, which will send a call to the url <code>judgment:post_judgment</code> in <code>judgments/url.py</code> and run the view <code>JudgmentAJAXView</code> that will save the document's judgment to the database. If you would like to include more information to be saved with each judgment, you can modify the <code>send_judgment()</code> in <code>iterative.html</code>. You will also need to modify the database model, Judgement, associated with each judgment instance. The <code>Judgement</code> class is located in <code>judgment/models.py</code>.</p>
 
 
         <h6>CAL and Search</h6>
-<p>Both components follow a similar pattern as the Iterative component described above. The difference is that both are running somewhere else, and we need to make an http calls to get the documents we need to judge. The IPs for each component is set in <code>config/settings/base.py</code>. The methods used to retrieve documents are found in <code>/interfaces/</code>.</p>
+<p>Both components follow a similar pattern as the Iterative component described above. The difference is that both are running separately. Communication to and from each component (e.g. getting the documents we need to judge) is done through HTTP calls. The IPs for each component must be set in <code>config/settings/base.py</code>. Take a look at the methods used to communicate with components (found in <code>/interfaces/</code>) for further details.</p>
 
 <p>The HTML associated with each component is found under the templates folder under the component directory.</p>
 

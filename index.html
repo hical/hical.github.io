@@ -47,11 +47,11 @@
     </div>
 
     <div class="content">
+        <h2>Want to find all relevant documents?</h2>
         <p>HiCAL is a system for efficient high-recall retrieval.
             The system allows retrieving and assessing relevant documents and provides high data processing performance and a user-friendly document assessment interface.
-            The platform is designed to increase assessors’ assessment performance and reduce review effort.
         </p>
-
+        <hr>
 
         <h2>Installation</h2>
         <h4>Requirements</h4>
@@ -60,10 +60,12 @@
             <li><code>docker</code>: Refer to this <a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04">installation guide</a> if you would like to install it on Ubuntu 16.04</li>
             <li><code>docker-compose</code>
         </ul>
-        <h4>Corpus</h4>
+        <h4><a name="corpus">Corpus</a></h4>
+        <p>Before you start installing, you need to make sure your corpus is ready and in the right format.
+        This step is necessary to be able run the system.</p>
         <p>@Nimish </p>
         <h4>How to Install</h4>
-        <p>Once you have all the requirements installed and your corpus ready, run the following in your terminal</p>
+        <p>Once you have all the requirements installed and your <a href="#corpus">corpus</a> ready, run the following in your terminal</p>
 <pre><code>
 # Checkout the repo
 git clone https://github.com/HiCAL/HiCAL.git
@@ -111,7 +113,7 @@ docker-compose -f HiCAL.yml start
         <ul>
             <li><span class="code-inline">config/nginx/nginx.conf</span> :</li>
             <li style="list-style-type: none;">
-                <p>This file controls the nginx server. By default, the CAL is accessed through port 9001 and the web interface is accessed through port 9000. These ports are exposed to the outside world by the docker (specified in <span class="code-inline">HiCAL.yml</span>).
+                <p>This file controls the nginx server. By default, the CAL is accessed through port <code>9001</code> and the web interface is accessed through port <code>9000</code>. These ports are exposed to the outside world by the docker (specified in <span class="code-inline">HiCAL.yml</span>).
                 Our system uses the nginx instance to serve document and paragraphs to the web interface.</p>
             </li>
 
