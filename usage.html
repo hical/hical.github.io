@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>HiCAL - A System for Efficient High-Recall Retrieval</title>
+
+    <!-- Bootstrap & Font Awesome CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="static/style.css">
+
+
+</head>
+<body>
+    <div class="navbar-container">
+        <nav class="navbar navbar-toggleable-md navbar-light ml-4 mr-4">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand" href="index.html"><h1><span>Hi</span>CAL</h1></a>
+                <span class="navbar-text  mb-3">
+                    <span class=" mr-1"></span> A System for Efficient High-Recall Retrieval.
+                  </span>
+
+            <div class="navbar-toggler-right" id="navbarText">
+                <ul class="navbar-nav mr-auto mb-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Install</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="usage.html">Usage<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="documentation.html">Documentation</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="paper.html">Paper</a>
+                    </li>
+
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+
+    <div class="content">
+        <h4>Create a user and login</h4>
+        <p>Once your docker images are up and running, open your browser to <a href="http://localhost:9000/" class="code-inline">http://localhost:9000/</a>.
+        You should be able to access the web interface for the system. Create a user (or click on practice) and login.
+        </p>
+
+        <div class="row">
+            <div class="col-md-4">
+                <figure class="figure">
+                  <img src="images/login.png" class="figure-img img-fluid rounded p-1 border gray-background" alt="Login page of HiCAL.">
+                  <figcaption class="figure-caption text-center">Figure 1: Login page of HiCAL. You can also use the practice account by clicking on the "click to practice" button.</figcaption>
+                </figure>
+            </div>
+            <div class="col-md-4">
+                <figure class="figure">
+                  <img src="images/home_notopic.png" class="figure-img img-fluid rounded p-1 border gray-background" alt="Homepage HiCAL.">
+                  <figcaption class="figure-caption text-center">Figure 2: After logging in to HiCAL, create or select a topic of search. This will start a session and train the Machine learning model.</figcaption>
+                </figure>
+            </div>
+            <div class="col-md-4">
+                <figure class="figure">
+                  <img src="images/home_topicinit.png" class="figure-img img-fluid rounded p-1 border gray-background" alt="Homepage HiCAL.">
+                  <figcaption class="figure-caption text-center">Figure 3: After initiating a topic, you can select any of the retrieval component (CAL or Search) from the left side bar.</figcaption>
+                </figure>
+            </div>
+        </div>
+
+        <p>Once you login, create a topic of search. Once created, navigate to the CAL or Search components using the side bar.</p>
+
+        <h2>How to use</h2>
+        <h4>HiCAL Web</h4>
+        <p>There are 2 retrieval components, CAL (Figure 4a) and Search (Figure 4b). Documents judged from the Search component are also used to update prime the machine learning model used in the CAL interface.</p>
+
+        <figure class="figure">
+          <img src="images/posterinterfaces.png" class="figure-img img-fluid mb-4" alt="Homepage HiCAL.">
+          <figcaption class="figure-caption text-center">Figure 4: a) Left, Document Queue Interface (CAL/AutoTAR). b) Right, Interactive Search and Judging Interface.</figcaption>
+        </figure>
+
+        <h5 class="mt-5">CAL Interface</h5>
+        <p>In this interface, the machine learning model will select the next most-likely relevant document to show you.
+        The model initially uses the seed query you have entered when creating the topic of search to train the model.
+        After each iteration of reviewing and judging, the model improves by using your previous judgments to further update the model.
+        <div class="alert alert-warning" role="alert">
+          <p class="m-0">Note! It is a good idea to first "prime" the model by judging documents from the search engine.
+          After a few judgments from Search, go to the CAL interface to view the documents the machine learning model has selected.</p>
+        </div>
+        <h6>Keyword Highlighting</h6>
+        <p>
+        You can highlight any keywords you like by entering it in the highlighting search bar.
+            Words or part of words that match your entered keywords will be highlighted.
+        </p>
+
+        <h6>Judging</h6>
+        <p> You can judge a document by clicking at any of the judging buttons (<span class="text-danger">not relevant</span>, <span class="text-warning">relevant</span>, <span class="text-success">highly relevant</span>) or using the keyboard shortcuts (<span class="text-danger">s</span>, <span class="text-warning">r</span>, <span class="text-success">h</span>).
+            To rejudge a document you have previously judged, you can click on the "<span class="text-primary">Latest judgment</span>" buttons on the top right corner, or use the keyboard shortcut "<span class="text-primary">u</span>").
+        </p>
+        <p>
+        Once you judge a document, the model will retrain and the next most-likely relevant document will be returned.
+            A cache-queue is implemented in the front-end to speed the reviewing process while waiting for the model to complete the training.
+            Once the training is done, the queue is automatically flushed and updated with the new set of documents.
+            This increases the responsiveness of the system and removes any perceptible interface lag.
+        </p>
+
+        <p>This model will not return anything once all documents in the corpus are judged.</p>
+
+        <h6>Juding using a paragraph excerpt</h6>
+        <p>Often times, documents contains few paragraphs that can used to determine the relevancy of the document.
+            Instead of reading or searching the whole document for relevant material,
+            assessing the relevancy of a document by reading the most relevant paragraph saves you the time of reading unnecessary content.
+        </p>
+        <p>
+            By default, the interface will show you what the model has selected as the most-likely relevant paragraph.
+            Reviewing paragraphs instead of full documents reduces effort and review time.
+        </p>
+        <p>
+            If you believe you need to review the full document to determine its relevancy, you can click on the
+            "view full document" button to view the whole document content. The full document content will appear below the
+            paragraph.
+        </p>
+        <p> You can also customize the interface (see documentation) to your needs (e.g. only show paragraph excerpts, only show full document content, etc).
+        </p>
+
+
+
+        <h5 class="mt-5">Search Interface</h5>
+        <p>The search interface allows you to search for documents using your own queries.
+            By default, the interface will return 10 results from the search engine.
+            You can select the number of documents you want to return using the dropdown button next to the search bar.
+        </p>
+        <p>Each Search Engine Result Page (SERP) item will contain a snippet generated by the search engine and a set of judging buttons.
+            Judged documents will have an vertical indicator bar showing your relevancy judgment of the document.
+        </p>
+        <p>You can click at any SERP item to view or search the full document content.</p>
+
+        <p>Any document you judge in the Search interface will be used to update the machine learning model (accessible in the CAL interface).</p>
+
+        <div class="alert alert-primary mt-5 mb-5" role="alert">
+          <h4 class="alert-heading">What interface to use?</h4>
+          <hr>
+
+          <p>Our users completed several tasks using our system and have indicated that they like to have the full-fledged system (Search enabled, CAL enabled with paragraph excerpt and ability to view the full document).
+          Users want full control of the system.
+
+          <p>However, this causes users to be slow and waste time.
+            Our analysis shows that performance is highest when their interactions are limited to producing relevance judgments on paragraph length excerpts from the CAL interface.</p>
+          </p>
+        <p>
+            For more details, you can refer to our <a href="static/de27-abualsaudA.pdf">paper</a>.
+        </p>
+        </div>
+
+        <h5>Exporting judgments</h5>
+        <p>You can click on the archive button on the side bar to access the list of documents you have judged for your current topic. Click on export to csv to get a csv file of your judgments.</p>
+
+        <div class="row">
+            <div class="col-md-6">
+                <figure class="figure">
+                  <img src="images/archive.png" class="figure-img img-fluid mb-4 rounded p-1 border gray-background" alt="Export judgments from the archive page.">
+                </figure>
+            </div>
+            <div class="col-md-6">
+                <p>Figure 5. A list of the documents you have judged for your current topic is shown in the archive page. You can export your document judgments by clicking on the export button.</p>
+            </div>
+        </div>
+
+
+        <h4 class="mt-3">HiCAL Client</h4>
+        <p>@Nimish</p>
+
+
+        <h2 class="mt-5">Bugs, issues or feature requests?</h2>
+        <p>Please report <a href="https://www.github.com/hical/hical/issues">here</a>.</p>
+
+
+        <h2 class="mt-5">LICENSE</h2>
+        <a href="http://www.gnu.org/licenses/gpl.html"><img src="images/gpl.png"></a>
+
+    </div>
+
+    <div class="content">
+        <ul class="sm" style="list-style: none;">
+            <li>
+                <a href="https://github.com/HiCAL" target="_blank"><i class="fa fa-github"></i></a> <span class="ml-3">/</span>
+            </li>
+            <li class="small mt-1">
+                GitHub code.
+            </li>
+            <li class="small mt-1">
+                GNU General Public License v3.0
+            </li>
+        </ul>
+        <p class="copy"></p>
+    </div>
+
+</body>
+</html>
