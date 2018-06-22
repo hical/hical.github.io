@@ -61,7 +61,14 @@
             </div>
         </div>
 
-        <h4>HiCAL-web</h4>
+        <h2>Documentation</h2>
+        <p>Click for more details.</p>
+        <div class="row" style="text-align: center">
+            <div class="col-sm-6"><h5><a href="#HiCAL-web">HiCAL web</a></h5></div>
+            <div class="col-sm-6"><h5><a href="#HiCAL-engine">HiCAL engine</a></h5></div>
+        </div>
+
+        <h4><a name="HiCAL-web">HiCAL-web</a></h4>
         <h5>Setting up</h5>
         <p>
             The platform requires a database for logging and storing document judgments.
@@ -123,6 +130,102 @@ PARA_URL = '127.0.0.0:9000/para'
 </code>
 </pre>
 
+        <h5><a name="IntegratingSearch">Integrating Search</a></h5>
+        <p>Once you have a search engine server running, make sure you update the <code>SEARCH_SERVER_IP</code> and <code>SEARCH_SERVER_PORT</code> in <code>config/settings/base.py</code>.
+        <p> You also need to update the <code>url</code> variable in the method <code>get_documents</code> in <code>interfaces/SearchEngine/functions.py</code>.
+        <p>The <code>get_documents</code> method will send a <code>GET</code> request to the <code>url</code> of the search engine.</p>
+        <p>The parameters of the request are:</p>
+        <ul>
+            <li><b>'start'</b>: Integer - Start from rank (keep 0 if you don't know).</li>
+            <li><b>'numdisplay'</b>: Integer - The number of SERP items to return. </li>
+            <li><b>'query'</b>: String - The query to submit to the search engine.</li>
+        </ul>
+
+        <p>Update the <code>get_documents</code> to parse the response. Make sure the method returns the following:</p>
+
+<pre>
+<code>
+result: A list of documents, where each document is composed of
+    {
+        "rank": rank, # rank of document
+        "docno": docno, # doc id
+        "title": title, # Title of SERP item
+        "snippet": snippet # Snippet of SERP item
+    }
+doc_ids: A list of document ids in the same order as appeared in result
+time_taken: str of the time taken to complete the search request
+</code>
+</pre>
+
+<p>Here is an example of what the file <code>interfaces/SearchEngine/functions.py</code> should look like.</p>
+<pre>
+<code>
+from collections import OrderedDict
+from config.settings.base import SEARCH_SERVER_IP
+from config.settings.base import SEARCH_SERVER_PORT
+import urllib.parse
+
+import httplib2
+import xmltodict
+
+
+def get_documents(query, start=0, numdisplay=20):
+    """
+    :param query: The query to submit
+    :param start: Start from
+    :param numdisplay: Number of documents to return
+    :return:
+        result: A list of documents, where each document is composed of
+            {
+                "rank": rank, # rank of document
+                "docno": docno, # doc id
+                "title": title, # Title of SERP item
+                "snippet": snippet # Snippet of SERP item
+            }
+        doc_ids: A list of document ids in the same order as appeared in result
+        time_taken: str of the time taken to complete the search request
+    """
+    h = httplib2.Http()
+    url = "http://{}:{}/websearchapi/search.php?{}" # Update this url to whatever your search engine supports
+
+    parameters = {'start': start, 'numdisplay': numdisplay, 'query': query}
+    parameters = urllib.parse.urlencode(parameters)
+    resp, content = h.request(url.format(SEARCH_SERVER_IP,
+                                         SEARCH_SERVER_PORT,
+                                         parameters),
+                              method="GET")
+
+    if resp and resp.get("status") == "200":
+        xmlDict = xmltodict.parse(content)
+        try:
+            xmlResult = xmlDict['search-response']['results']['result']
+        except TypeError:
+            return None, None, None
+
+        doc_ids = []
+        result = OrderedDict()
+
+        if not isinstance(xmlResult, list):
+            xmlResult = [xmlResult]
+
+        for doc in xmlResult:
+            docno = doc["docno"].zfill(7)
+            parsed_doc = {
+                "rank": doc["rank"],
+                "docno": docno,
+                "title": doc["title"],
+                "snippet": doc["snippet"]
+            }
+            result[docno] = parsed_doc
+            doc_ids.append(docno)
+
+        return result, doc_ids,  xmlDict['search-response']['total-time']
+
+    return None, None, None
+</code>
+</pre>
+
+        </p>
 
 
         <h5>Logging</h5>
@@ -295,6 +398,14 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 <p>Both components follow a similar pattern as the Iterative component described above. The difference is that both are running somewhere else, and we need to make an http calls to get the documents we need to judge. The IPs for each component is set in <code>config/settings/base.py</code>. The methods used to retrieve documents are found in <code>/interfaces/</code>.</p>
 
 <p>The HTML associated with each component is found under the templates folder under the component directory.</p>
+
+
+    <h4><a name="HiCAL-engine">HiCAL-engine</a></h4>
+    <p>@Nimish</p>
+
+
+
+
     </div>
 
     <div class="content">
