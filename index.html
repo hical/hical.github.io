@@ -54,7 +54,7 @@
         <hr>
 
         <h2>Installation</h2>
-        <h4>Requirements</h4>
+        <h4><a name="requirements">Requirements</a></h4>
         <p>The system is dockerized into different docker images. Make sure your machine has these installed </p>
         <ul>
             <li><code>docker</code>: Refer to this <a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04">installation guide</a> if you would like to install it on Ubuntu 16.04</li>
@@ -65,7 +65,7 @@
         This step is necessary to be able run the system.</p>
         <p>@Nimish </p>
         <h4>How to Install</h4>
-        <p>Once you have all the requirements installed and your <a href="#corpus">corpus</a> ready, run the following in your terminal</p>
+        <p>Once you have all the <a href="#requirements">requirements</a> installed and your <a href="#corpus">corpus</a> ready, run the following in your terminal</p>
 <pre><code>
 # Checkout the repo
 git clone https://github.com/HiCAL/HiCAL.git
@@ -80,7 +80,7 @@ docker-compose -f HiCAL.yml start
 
         <p>This will download the repository to your local machine, and create/start the docker images for you.</p>
         <p>Port <code>9001</code> and <code>9000</code> will be used by system. Make sure these ports are not being used by other applications in your machine. If you would like to change these ports, please read the configuration section below.</p>
-
+        <p>We strongly recommend installing via docker. If you would like to not use docker, please look at the documentation page for more details.</p>
         <h4>How to run</h4>
         <p>Once your docker images are up and running, open your browser to <a href="http://localhost:9000/" class="code-inline">http://localhost:9000/</a>.
         You should be able to access the web interface for the system.
