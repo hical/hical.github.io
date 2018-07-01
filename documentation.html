@@ -71,11 +71,12 @@
             <div class="col-sm-6"><h5><a href="#HiCAL-engine">HiCAL engine</a></h5></div>
         </div>
 
-        <h4><a name="HiCAL-web">HiCAL-web</a></h4>
+        <h4 class="mt-5"><a name="HiCAL-web">HiCAL-web</a></h4>
+        <p>The details below are for setting up HiCAL-web (no docker).</p>
         <h5>Setting up</h5>
         <p>
-            The platform requires a database for logging and storing document judgments.
-            Install postgres and run it, make sure you create a db called <code>HiCAL</code>, or whatever you have set in <a href="">settings</a>.
+            The system requires a database for storing document judgments, user profiles and topics.
+            Install postgres and run it, make sure you create a db called <code>HiCAL</code>, or whatever you have set in <a href="">settings</a> (<code>config/settings/base.py</code>).
         </p>
         <p>
             To create a db, use this command:
@@ -99,7 +100,7 @@
         </p>
 
         <p>To run locally, run <code>python manage.py runserver</code></p>
-
+        <p>This will start the web server running in the default port 8000. You can access the server by going to <a href="http://localhost:8000/">http://localhost:8000/</a>.</p>
         <h5>Setting Up Your Users</h5>
             <p>Each document judgments is associated with a user profile.</p>
 
@@ -109,7 +110,7 @@
 
         <pre><code>$ python manage.py createsuperuser</code></pre>
 
-        <p>For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users. A superuser can access the platform's admin page by going to <code>/admin</code> or whatever is set in the settings.</p>
+        <p>For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users. A superuser can access the platform's admin page by going to <code>/admin</code> (e.g. <a href="http://localhost:8000/admin">http://localhost:8000/admin</a> ) or whatever is set in the settings.</p>
 
         <h6>Configuring Signup Form</h6>
 
@@ -122,7 +123,7 @@
         <p>Make sure you update the IPs for each component in the <code>config/settings/base.py</code> file.</p>
 <pre>
 <code>
-# CORE TREC COMPONENTS IPS *REQUIRED*
+# HiCAL COMPONENTS IPS *REQUIRED*
 # ------------------------------------------------------------------------------
 CAL_SERVER_IP = '127.0.0.0'
 CAL_SERVER_PORT = '9001' # The port for CAL engine
@@ -144,7 +145,7 @@ PARA_URL = '127.0.0.0:9000/para'
             <li><b>'query'</b>: String - The query to submit to the search engine.</li>
         </ul>
 
-        <p>Update the <code>get_documents</code> to parse the response. Make sure the method returns the following:</p>
+        <p>You can change the request as you would like. Update the <code>get_documents</code> to parse the response. Make sure the method returns the following:</p>
 
 <pre>
 <code>
@@ -159,8 +160,34 @@ doc_ids: A list of document ids in the same order as appeared in result
 time_taken: str of the time taken to complete the search request
 </code>
 </pre>
-
-<p>Here is an example of what the file <code>interfaces/SearchEngine/functions.py</code> should look like.</p>
+<h6><a name="IntegratingSearchExample">Example</a></h6>
+Suppose the response from the search server (using indri) is an XML of the following format: </p>
+<pre>
+<code>
+&lt;search-response&gt;
+    &lt;raw-query&gt;foobar&lt;/raw-query&gt;
+    &lt;total-time&gt;0.17908906936646&lt;/total-time&gt;
+    &lt;indri-query&gt;foobar&lt;/indri-query&gt;
+    &lt;indri-sentence-query&gt;#combine[sentence]( foobar )&lt;/indri-sentence-query&gt;
+    &lt;results&gt;
+        &lt;result&gt;
+            &lt;rank&gt;1&lt;/rank&gt;
+            &lt;score&gt;-8.00303&lt;/score&gt;
+            &lt;url/&gt;
+            &lt;docno&gt;774090&lt;/docno&gt;
+            &lt;document-id&gt;1055435&lt;/document-id&gt;
+            &lt;title&gt;
+            What Goes On?; Don't Speak Unix? Oh? Try http:www.fooledyou
+            &lt;/title&gt;
+            &lt;snippet&gt;
+            Purists would say, "lower-case aich tee tee pee colon forward slash forward slash double you double you double you dot &lt;strong&gt;foobar&lt;/strong&gt; dot com," and might add that the letters signify a type of server computer that recognizes data transfers based on the hypertext transport protocol, followed by the branches of the specific data directories where Web pages can be found. Whew!
+            &lt;/snippet&gt;
+        &lt;/result&gt;
+    &lt;/results&gt;
+&lt;/search-response&gt;
+</code>
+</pre>
+<p>Here is an example of what the file <code>interfaces/SearchEngine/functions.py</code> can look like.
 <pre>
 <code>
 from collections import OrderedDict
