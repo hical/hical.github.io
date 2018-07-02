@@ -161,7 +161,9 @@ time_taken: str of the time taken to complete the search request
 </code>
 </pre>
 <h6><a name="IntegratingSearchExample">Example</a></h6>
-Suppose the response from the search server (using indri) is an XML of the following format: </p>
+
+<p>Suppose the response from the search server (using indri) is an XML of the following format: </p>
+
 <pre>
 <code>
 &lt;search-response&gt;
@@ -187,7 +189,9 @@ Suppose the response from the search server (using indri) is an XML of the follo
 &lt;/search-response&gt;
 </code>
 </pre>
+
 <p>Here is an example of what the file <code>interfaces/SearchEngine/functions.py</code> can look like.
+
 <pre>
 <code>
 from collections import OrderedDict
@@ -255,14 +259,12 @@ def get_documents(query, start=0, numdisplay=20):
 </code>
 </pre>
 
-        </p>
-
 
         <h5>Logging</h5>
 
         <p>We use python’s built in logging module for system and analytics logging. You can configure logging from the project settings in <code>settings/base.py</code>.
         <p>The repo currently has one logging handle. Logs are saved in <code>logs/web.log</code>.</p>
-        <p>Check <code>config/settings/base.py</code> for more logging configurations</p>
+        <p>Check <code>config/settings/base.py</code> for more logging configurations.</p>
 
         <h6>Using the logger</h6>
 
@@ -291,24 +293,23 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 </code>
 </pre>
 
-        <p>We suggest you follow a simple logging style that you can easily parse and understand. Place logging message where ever you need to log/track changes in the systems or user behaviour.</p>
-
+    <p>We suggest you follow a simple logging style that you can easily parse and understand. Place logging message where ever you need to log/track changes in the systems or user behaviour.</p>
 
     <h5>Components</h5>
 
-        <p>Our system currently supports two retrieval components, CAL and Search.
-            All components in the architecture are stand-alone and interact with each other via HTTP API.
-            You can also add your own component and run it locally if you wish.
-        </p>
+    <p>Our system currently supports two retrieval components, CAL and Search.
+        All components in the architecture are stand-alone and interact with each other via HTTP API calls.
+        You can also add your own component if you wish.
+    </p>
 
-        <h6>Adding a component</h6>
-        <p>Let’s go through an example of adding a new component. For simplicity, the component will simply return a list of predefine documents that need to be judged. The component will allow user to access and judge these documents in the order they are define. We’ll call this component Iterative.</p>
+    <h6>Adding a component</h6>
+    <p>Let’s go through an example of adding a new component. For simplicity, the component will simply return a list of predefine documents that need to be judged. The component will allow user to access and judge these documents in the order they are define. We’ll call this component Iterative.</p>
 
-        <p>Let’s add a new app in our project by running this command:</p>
+    <p>Let’s add a new app in our project by running this command:</p>
 
 <pre><code>$ python manage.py createapp iterative</code></pre>
 
-<p>This will create a folder with all the files we need. Make sure the newly created app is in the right directory. It should be in /HiCAL.</p>
+<p>This will create a folder with all the files we need. You might need to move the directory. Make sure the newly created app is in the right directory. It should be in <code>/HiCAL</code>.</p>
 <p>Let’s add the new app to our settings file so that our server is aware of it. You can do this by going to <code>config/settings/base.py</code> file and adding <code>HiCAL.iterative</code> to <code>LOCAL_APPS</code>:
 
 <pre>
@@ -419,9 +420,9 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
 <p>The HTML associated is under <code>iterative/templates/iterative/iterative.html</code>. The <code>HomePageView</code> view, which the url pattern <code>/iterative/^</code> is pointing to, will render this page. If you look at the <code>HomePageView</code> view, you will see that <code>template_name = 'iterative/iterative.html'</code>.</p>
 
-<p>You can modify the <code>iterative.html</code> as you like. The <code>iterative.html</code> page will call <code>iterative:get_docs</code> url once the page is loaded. You can customize the behaviour by modifying the javascript code in <code>iterative.html</code> to meet your needs.</p>
+<p>You can modify the <code>iterative.html</code> file as you like. The <code>iterative.html</code> page will call <code>iterative:get_docs</code> url once the page is loaded. You can customize the behaviour by modifying the javascript code in <code>iterative.html</code> to meet your needs.</p>
 
-<p>The judgment buttons in the interface will call the <code>send_judgment()</code> function, which will send a call to the url <code>judgment:post_judgment</code> in <code>judgments/url.py</code> and run the view <code>JudgmentAJAXView</code> that will save the document's judgment to the database. If you would like to include more information to be saved with each judgment, you can modify the <code>send_judgment()</code> in <code>iterative.html</code>. You will also need to modify the database model, Judgement, associated with each judgment instance. The <code>Judgement</code> class is located in <code>judgment/models.py</code>.</p>
+<p>The judgment buttons in the interface will call the <code>send_judgment()</code> function, which will send a call to the url <code>judgment:post_judgment</code> in <code>judgments/url.py</code> and run the view <code>JudgmentAJAXView</code> that will save the document's judgment to the database. If you would like to include more information to be saved with each judgment, you can modify the <code>send_judgment()</code> in <code>iterative.html</code>. You will also need to modify the database model, <code>Judgement</code>, associated with each judgment instance. The <code>Judgement</code> class is located in <code>judgment/models.py</code>.</p>
 
 
         <h6>CAL and Search</h6>
