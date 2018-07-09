@@ -81,7 +81,7 @@
         <h5>Setting up</h5>
         <p>
             The system requires a database for storing document judgments, user profiles and topics.
-            Install postgres and run it, make sure you create a db called <code>HiCAL</code>, or whatever you have set in <a href="">settings</a> (<code>config/settings/base.py</code>).
+            Install postgres and run it, make sure you create a db called <code>HiCAL</code>, or whatever you have set in <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/config/settings/base.py">settings</a> (<code>config/settings/base.py</code>).
         </p>
         <p>
             To create a db, use this command:
@@ -125,7 +125,7 @@
 
         <h5>Component Settings</h5>
         <p>Communication from and to the component are done through http requests.</p>
-        <p>Make sure you update the IPs for each component in the <code>config/settings/base.py</code> file.</p>
+        <p>Make sure you update the IPs for each component in the <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/config/settings/base.py"><code>config/settings/base.py</code></a> file.</p>
 <pre>
 <code>
 # HiCAL COMPONENTS IPS *REQUIRED*
@@ -140,8 +140,8 @@ PARA_URL = '127.0.0.0:9000/para'
 </pre>
 
         <h5><a name="IntegratingSearch">Integrating Search</a></h5>
-        <p>Once you have a search engine server running, make sure you update the <code>SEARCH_SERVER_IP</code> and <code>SEARCH_SERVER_PORT</code> in <code>config/settings/base.py</code>.
-        <p> You also need to update the <code>url</code> variable in the method <code>get_documents</code> in <code>interfaces/SearchEngine/functions.py</code>.
+        <p>Once you have a search engine server running, make sure you update the <code>SEARCH_SERVER_IP</code> and <code>SEARCH_SERVER_PORT</code> in <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/config/settings/base.py"><code>config/settings/base.py</code></a>.
+        <p> You also need to update the <code>url</code> variable in the method <code>get_documents</code> in <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/hicalweb/interfaces/SearchEngine/functions.py"><code>interfaces/SearchEngine/functions.py</code></a>.
         <p>The <code>get_documents</code> method will send a <code>GET</code> request to the <code>url</code> of the search engine.</p>
         <p>The parameters of the request are:</p>
         <ul>
@@ -195,7 +195,7 @@ time_taken: str of the time taken to complete the search request
 </code>
 </pre>
 
-<p>Here is an example of what the file <code>interfaces/SearchEngine/functions.py</code> can look like.
+<p>Here is an example of what the file <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/hicalweb/interfaces/SearchEngine/functions.py"><code>interfaces/SearchEngine/functions.py</code></a> can look like.
 
 <pre>
 <code>
@@ -269,7 +269,7 @@ def get_documents(query, start=0, numdisplay=20):
 
         <p>We use python’s built in logging module for system and analytics logging. You can configure logging from the project settings in <code>settings/base.py</code>.
         <p>The repo currently has one logging handle. Logs are saved in <code>logs/web.log</code>.</p>
-        <p>Check <code>config/settings/base.py</code> for more logging configurations.</p>
+        <p>Check <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/config/settings/base.py"><code>config/settings/base.py</code></a> for more logging configurations.</p>
 
         <h6>Using the logger</h6>
 
@@ -315,7 +315,7 @@ class JudgmentAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 <pre><code>$ python manage.py createapp iterative</code></pre>
 
 <p>This will create a folder with all the files we need. You might need to move the directory. Make sure the newly created app is in the right directory. It should be in <code>/HiCAL</code>.</p>
-<p>Let’s add the new app to our settings file so that our server is aware of it. You can do this by going to <code>config/settings/base.py</code> file and adding <code>HiCAL.iterative</code> to <code>LOCAL_APPS</code>:
+<p>Let’s add the new app to our settings file so that our server is aware of it. You can do this by going to <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/config/settings/base.py"><code>config/settings/base.py</code></a> file and adding <code>HiCAL.iterative</code> to <code>LOCAL_APPS</code>:
 
 <pre>
 <code>
@@ -328,7 +328,7 @@ LOCAL_APPS = [
 </code>
 </pre>
 
-        <p>Now add a specific url for the app in <code>config/urls.py</code>:</p>
+        <p>Now add a specific url for the app in <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/config/urls.py"><code>config/urls.py</code></a>:</p>
 <pre>
 <code>
 urlpatterns = [
@@ -340,7 +340,7 @@ urlpatterns = [
 </code>
 </pre>
 
-    <p>and create a new <code>urls.py</code> file under the iterative app directory:</p>
+    <p>and create a new <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/hicalweb/iterative/urls.py"><code>urls.py</code></a> file under the iterative app directory:</p>
 
 <pre>
 <code>
@@ -360,7 +360,7 @@ urlpatterns = [
 
 <p>This will allow access to the component from the url <code>/iterative/</code></p>
 
-<p>We will use <code>get_docs/</code> url pattern to link to our view <code>DocAJAXView</code>, which will be responsible for getting the documents to judge. Please look at <code>iterative/views.py</code> for more details on what these views do.</p>
+<p>We will use <code>get_docs/</code> url pattern to link to our view <code>DocAJAXView</code>, which will be responsible for getting the documents to judge. Please look at <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/hicalweb/iterative/views.py"><code>iterative/views.py</code></a> for more details on what these views do.</p>
 
 <p>Let’s look at <code>DocAJAXView</code> view as an example:</p>
 
@@ -423,7 +423,7 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 
 <p><code>documents</code> will be passed as context to our template, and loaded in the browser.</p>
 
-<p>The HTML associated is under <code>iterative/templates/iterative/iterative.html</code>. The <code>HomePageView</code> view, which the url pattern <code>/iterative/^</code> is pointing to, will render this page. If you look at the <code>HomePageView</code> view, you will see that <code>template_name = 'iterative/iterative.html'</code>.</p>
+<p>The HTML associated is under <a href="https://github.com/hical/HiCAL/blob/master/HiCALWeb/hicalweb/iterative/templates/iterative/iterative.html"><code>iterative/templates/iterative/iterative.html</code></a>. The <code>HomePageView</code> view, which the url pattern <code>/iterative/^</code> is pointing to, will render this page. If you look at the <code>HomePageView</code> view, you will see that <code>template_name = 'iterative/iterative.html'</code>.</p>
 
 <p>You can modify the <code>iterative.html</code> file as you like. The <code>iterative.html</code> page will call <code>iterative:get_docs</code> url once the page is loaded. You can customize the behaviour by modifying the javascript code in <code>iterative.html</code> to meet your needs.</p>
 
