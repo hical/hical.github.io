@@ -66,25 +66,55 @@
             <li><code>docker</code>: Refer to this <a href="https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-16-04">installation guide</a> if you would like to install it on Ubuntu 16.04</li>
             <li><code>docker-compose</code>
         </ul>
-        <h4><a name="corpus">Corpus</a></h4>
+
+        <h4><a name="corpus">Corpus and How to Install</a></h4>
         <p>Before you start installing, you need to make sure your corpus is ready and in the right format.
-        This step is necessary to be able run the system.</p>
-        <p>@Nimish </p>
-        <h4>How to Install</h4>
-        <p>Once you have all the <a href="#requirements">requirements</a> installed and your <a href="#corpus">corpus</a> ready, run the following in your terminal</p>
+            This step is necessary to be able run the system. We will work with a toy corpus from <a href="https://github.com/hical/sample-dataset">https://github.com/hical/sample-dataset</a></p>
 <pre><code>
 # Checkout the repo
 git clone https://github.com/HiCAL/HiCAL.git
 cd HiCAL
+# Checkout the sample dataset
+git clone https://github.com/hical/sample-dataset.git
+cd sample-dataset
+python process.py athome4_sample.tgz
+# Create the data directory which is mounted to the docker containers
+mkdir ../data
+cp athome4_sample.tgz athome4_sample_para.tgz ../data/
+cd ..
+</code></pre>
 
-# build and run docker containers
-docker-compose -f HiCAL.yml build
-docker-compose -f HiCAL.yml up -d
-docker-compose -f HiCAL.yml start
-</code>
-</pre>
+        <p><code>process.py</code> is an example of how one might clean the corpus and generate excerpts. We will use the <code>athome4_sample.tgz</code> and the newly generated <code>athome4_sample_para.tgz</code> to generate document features.</p>
 
-        <p>This will download the repository to your local machine, and create/start the docker images for you.</p>
+<pre><code>
+# Create the cal docker container
+docker-compose -f HiCAL up --no-create cal
+# Access the shell from the cal container
+docker-compose -f HiCAL run cal bash
+root@container-id:/# cd src && make corpus_parser
+# Generate features
+root@container-id:/# ./corpus_parser  --in /data/athome4_sample.tgz --out /data/athome4_sample.bin --para-in /data/athome4_sample_para.tgz --para-out /data/athome4_para_sample.bin
+# Exit the shell with Ctrl+D
+</code></pre>
+
+        <p>We will now generate the document and paragraph files which will be showed to the assessors. Access and parsing logic for a corpus is decribed in the <code>functions.py</code> file. HiCAL by default supports the xml documents from the New York Times corpus. We have provided an alternative <code>functions.py</code> which works for <code>athome4</code></p>.
+
+<pre><code>
+# Extract the tgz files
+cd data
+tar xvzf athome4_sample.tgz
+mv athome4_test docs
+tar xvzf athome4_sample_para.tgz
+mv athome4_test para
+cd ..
+# Use the modified functions.py
+cp sample-dataset/functions.py HiCALWeb/hicalweb/interfaces/DocumentSnippetEngine/functions.py
+
+# We are all set! Lets fire up the containers
+DOC_BIN=/data/athome4_sample.bin PARA_BIN=/data/athome4_para_sample.bin docker-compose -f HiCAL.yml up -d
+# Visit localhost:9000
+</code></pre>
+
         <p>Port <code>9001</code> and <code>9000</code> will be used by system. Make sure these ports are not being used by other applications in your machine. If you would like to change these ports, please read the configuration section below.</p>
         <p>We strongly recommend installing via docker. If you would like to not use docker, please look at the documentation page for more details.</p>
         <h4>How to run</h4>

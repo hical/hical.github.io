@@ -436,8 +436,183 @@ class DocAJAXView(views.CsrfExemptMixin, views.LoginRequiredMixin,
 <p>The HTML associated with each component is found under the templates folder under the component directory.</p>
 
 
-    <h4><a name="HiCAL-engine">HiCAL-engine</a></h4>
-    <p>@Nimish</p>
+    <h4><a name="HiCAL-engine">HiCAL engine</a></h4>
+<h5 id="requirements">Requirements</h5>
+<ul>
+<li>libfcgi</li>
+<li>libarchive</li>
+<li>g++</li>
+<li>make</li>
+<li>spawn-fcgi (to run <code>bmi_fcgi</code>)</li>
+</ul>
+<h5 id="command-line-tool">Command Line Tool</h5>
+<pre><code>$ make bmi_cli
+$ ./bmi_cli --help
+Command line flag options: 
+      --help                Show Help
+      --async-mode          Enable greedy async mode <span class="hljs-keyword">for</span> classifier <span class="hljs-keyword">and</span> rescorer,
+                            overrides --judgment-per-iteration <span class="hljs-keyword">and</span> --num-iterations
+
+      --df                  Path <span class="hljs-keyword">of</span> the <span class="hljs-keyword">file</span> <span class="hljs-keyword">with</span> list <span class="hljs-keyword">of</span> terms <span class="hljs-keyword">and</span> their document
+                            frequencies. The <span class="hljs-keyword">file</span> contains space-separated word <span class="hljs-keyword">and</span>
+                            df <span class="hljs-keyword">on</span> every line. Specify only when df information <span class="hljs-keyword">is</span>
+                            <span class="hljs-keyword">not</span> encoded <span class="hljs-keyword">in</span> the document features <span class="hljs-keyword">file</span>.
+
+      --jobs                Number <span class="hljs-keyword">of</span> concurrent jobs (topics)
+      --threads             Number <span class="hljs-keyword">of</span> threads <span class="hljs-keyword">to</span> use <span class="hljs-keyword">for</span> scoring
+      --doc-features        Path <span class="hljs-keyword">of</span> the <span class="hljs-keyword">file</span> <span class="hljs-keyword">with</span> list <span class="hljs-keyword">of</span> document features
+      --para-features       Path <span class="hljs-keyword">of</span> the <span class="hljs-keyword">file</span> <span class="hljs-keyword">with</span> list <span class="hljs-keyword">of</span> paragraph features (BMI_PARA)
+      --qrel                Qrel <span class="hljs-keyword">file</span> <span class="hljs-keyword">to</span> use <span class="hljs-keyword">for</span> judgment
+      --max-effort          <span class="hljs-keyword">Set</span> max effort (number <span class="hljs-keyword">of</span> judgments)
+      --max-effort-factor   <span class="hljs-keyword">Set</span> max effort <span class="hljs-keyword">as</span> a factor <span class="hljs-keyword">of</span> recall
+      --num-iterations      <span class="hljs-keyword">Set</span> max number <span class="hljs-keyword">of</span> refresh iterations
+      --training-iterations  <span class="hljs-keyword">Set</span> number <span class="hljs-keyword">of</span> training iterations
+      --judgments-per-iteration  Number <span class="hljs-keyword">of</span> docs <span class="hljs-keyword">to</span> judge per iteration (-<span class="hljs-number">1</span> <span class="hljs-keyword">for</span> BMI <span class="hljs-keyword">default</span>)
+
+      --query               Path <span class="hljs-keyword">of</span> the <span class="hljs-keyword">file</span> <span class="hljs-keyword">with</span> queries (one seed per line; each
+                            line <span class="hljs-keyword">is</span> &lt;topic_id&gt; &lt;rel&gt; &lt;<span class="hljs-keyword">string</span>&gt;; can have multiple seeds per topic)
+
+      --judgment-logpath    Path <span class="hljs-keyword">to</span> log judgments. Specify a directory within which
+                            topic-specific logs will be generated.
+
+      --mode                <span class="hljs-keyword">Set</span> strategy: (<span class="hljs-keyword">default</span>) BMI_DOC, BMI_PARA, BMI_PARTIAL_RANKING,
+                            BMI_ONLINE_LEARNING, BMI_PRECISION_DELAY, BMI_RECENCY_WEIGHTING, BMI_FORGET
+    ... (Strategy specific arguments truncated)
+
+</code></pre><ul>
+<li>The document frequency data is encoded within the document features bin file.
+<code>--df</code> shouldn&#39;t be used unless you are using the old document feature format.</li>
+</ul>
+<h5 id="corpus-parser">Corpus Parser</h5>
+<p>This tool generates document features of a given corpus.</p>
+<p>The tool takes as input an archived corpus <code>tar.gz</code>. Each file in the corpus is treated
+as a separate document with the name of the file (excluding the directories) as its ID.
+The files are processed as plaintext document. This gives users freedom to clean and
+form corpuses in different ways. In order to use the <code>BMI_PARA</code> mode in the main tool,
+the user needs to split each document such that each new document is a single paragraph.
+The name of these paragraph files should be <code>&lt;doc-id&gt;.&lt;para-id&gt;</code> (this is used by the tool
+to get the parent document for a given paragraph). For this reason, avoid using the character <code>.</code> in
+the <code>&lt;doc-id&gt;</code>.</p>
+<p><code>--type</code> as <code>svmlight</code> is not used by the main tool and should be used for debugging purposes.
+<code>--out-df</code> only works when <code>--type</code> is <code>svmlight</code>.</p>
+<p>The bin output format begins with the document frequency data followed by the document feature
+data. The document frequency data begins with a <code>uint32_t</code> specifying the number of <code>dfreq</code> records which follow.
+Each <code>dfreq</code> record begins with a null terminated string (word) followed by a <code>uint32_t</code> document frequency.
+The document feature data begins with a <code>uint32_t</code> specifying the number of <code>dfeat</code> records which follow.
+Each <code>dfeat</code> record begins with a null terminated string (document ID) followed by a <code>feature_list</code>. <code>feature_list</code>
+begins with a <code>uint32_t</code> specifying the number of <code>feature_pair</code> which follow. Each <code>feature_pair</code>
+is a <code>uint32_t</code> feature ID followed by a <code>float</code> feature weight.</p>
+<pre><code>$ make corpus_parser
+$ ./corpus_parser --<span class="hljs-keyword">help</span>
+Command <span class="hljs-keyword">line</span> flag options: 
+      --<span class="hljs-keyword">help</span>                Show <span class="hljs-keyword">Help</span>
+      --<span class="hljs-keyword">in</span>                  <span class="hljs-keyword">Input</span> corpus archive
+      --<span class="hljs-keyword">out</span>                 Output feature <span class="hljs-keyword">file</span>
+      --<span class="hljs-keyword">out</span>-df              Output document frequency <span class="hljs-keyword">file</span>
+      --<span class="hljs-keyword">type</span>                Output <span class="hljs-keyword">file</span> <span class="hljs-keyword">format</span>:  bin (default) or svmlight
+</code></pre><h5 id="fastcgi-based-web-server">FastCGI based web server</h5>
+<pre><code>$ make bmi_fcgi
+$ ./bmi_fcgi --help
+Command line flag <span class="hljs-attribute">options</span>: 
+      --df                  Path <span class="hljs-keyword">of</span> the file <span class="hljs-keyword">with</span> <span class="hljs-built_in">list</span> <span class="hljs-keyword">of</span> terms and their <span class="hljs-built_in">document</span> frequencies
+      --doc-features        Path <span class="hljs-keyword">of</span> the file <span class="hljs-keyword">with</span> <span class="hljs-built_in">list</span> <span class="hljs-keyword">of</span> <span class="hljs-built_in">document</span> features
+      --help                Show Help
+      --para-features       Path <span class="hljs-keyword">of</span> the file <span class="hljs-keyword">with</span> <span class="hljs-built_in">list</span> <span class="hljs-keyword">of</span> paragraph features
+      --threads             <span class="hljs-built_in">Number</span> <span class="hljs-keyword">of</span> threads to use <span class="hljs-keyword">for</span> scoring
+</code></pre><p><code>fcgi</code> libraries needs to be present in the system. <code>bmi_fcgi</code> uses <code>libfcgi</code> to communicate
+with any FastCGI capable web server like nginx. <code>bmi_fcgi</code> only supports modes <code>BMI</code> and <code>BMI_PARA</code>.
+Install <code>spawn-fcgi</code> in your system and run </p>
+<pre><code>$ spawn-fcgi -p <span class="hljs-number">8002</span> -n -- bmi_fcgi --doc-features <span class="hljs-regexp">/path/</span>to<span class="hljs-regexp">/doc/</span>features --df <span class="hljs-regexp">/path/</span>to<span class="hljs-regexp">/df</span>
+</code></pre><p>You can interact with the bmi_fcgi server through the HTTP API or the python bindings in <code>api.py</code>.</p>
+<h5 id="http-api-spec">HTTP API Spec</h5>
+<h6 id="begin-a-session">Begin a session</h6>
+<pre><code>POST /begin
+Data Params:
+    session_id=[string]
+    seed_query=[string]
+    async=[bool]
+    mode=[para,doc]
+    seed_judgments=doc1:rel1,doc2:rel2
+    judgments_per_iteration=[<span class="hljs-string">-1</span> or positive integer]
+
+<span class="hljs-keyword">Success </span>Response:
+    Code: 200
+    Content: {'session-id': [string]}
+
+<span class="hljs-keyword">Error </span>Response:
+    Code: 400
+    Content: {'error': 'session already exists'}
+</code></pre><p>The server can run multiple sessions each of which are identified by a unique <code>sesion_id</code>.
+The <code>seed_query</code> is the initial relevant string used for training. <code>async</code> determines if
+the server should wait to respond while refreshing. If <code>async</code> is set to false, the server
+immediately returns the next document to judge from the old ranklist while the refresh is
+ongoing in the background. <code>mode</code> sets whether to judge on paragraphs or documents.
+<code>seed_documents</code> can be used to initialize the session with some pre-determined judgments.
+It can also be used to restores states of the sessions when restarting the bmi server.
+Use positive integer for relevant and negative integer (or zero) for non-relevant.</p>
+<h6 id="get-document-to-judge">Get document to judge</h6>
+<pre><code>GET /get_docs
+URL Params:
+    session_id=[string]
+    max_count=[int]
+
+<span class="hljs-keyword">Success </span>Response:
+    Code: 200
+    Content: {'session-id': [string], 'docs': ["doc<span class="hljs-string">-1001</span>", "doc<span class="hljs-string">-1002</span>", "doc<span class="hljs-string">-1010</span>"]}
+
+<span class="hljs-keyword">Error </span>Response:
+    Code: 404
+    Content: {'error': 'session not found'}
+</code></pre><h6 id="submit-judgment">Submit Judgment</h6>
+<pre><code>POST /judge
+Data Params:
+    session_id=[string]
+    doc_id=[string]
+    rel=[<span class="hljs-string">-1</span>,1]
+
+<span class="hljs-keyword">Success </span>Response:
+    Code: 200
+    Content: {'session-id': 'xyz', 'docs': ["doc<span class="hljs-string">-1001</span>", "doc<span class="hljs-string">-1002</span>", "doc<span class="hljs-string">-1010</span>"]}
+
+<span class="hljs-keyword">Error </span>Response:
+    Code: 404
+    Content: {'error': 'session not found'}
+
+    Code: 404
+    Content: {'error': 'doc not found'}
+
+    Code: 400
+    Content: {'error': 'invalid judgment'}
+</code></pre><p>The <code>docs</code> field in the success response provides next documents to be judged.
+This is to save an additional call to <code>/get_docs</code>. If <code>async</code> is set to false and
+the judgement triggers a refresh, the server will finish the refresh before responding.</p>
+<h6 id="get-full-ranklist">Get Full Ranklist</h6>
+<pre><code>GET /get_ranklist
+URL Params:
+    session_id=[string]
+
+<span class="hljs-keyword">Success </span>Response:
+    Code: 200
+    Content (text/plain): newline separated document ids with their scores ordered
+                          from highest to lowest
+
+<span class="hljs-keyword">Error </span>Response:
+    Code: 404
+    Content: {'error': 'session not found'}
+</code></pre><p>Returns full ranklist based on the classifier from the last refresh.</p>
+<h6 id="delete-a-session">Delete a session</h6>
+<pre><code>DELETE /delete_session
+Data Params:
+    session_id: [string]
+
+<span class="hljs-keyword">Success </span>Response:
+    Code: 200
+    Content: {'session-id': [string]}
+
+<span class="hljs-keyword">Error </span>Response:
+    Code: 404
+    Content: {'error': 'session not found'}
+</code></pre>
 
 
 
