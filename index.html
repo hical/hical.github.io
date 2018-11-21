@@ -97,9 +97,9 @@ cd ..
 
 <pre><code>
 # Create the cal docker container
-docker-compose -f HiCAL up --no-create cal
+docker-compose -f HiCAL.yml up --no-recreate cal
 # Access the shell from the cal container
-docker-compose -f HiCAL run cal bash
+docker-compose -f HiCAL.yml run cal bash
 root@container-id:/# cd src && make corpus_parser
 # Generate features
 root@container-id:/# ./corpus_parser  --in /data/athome4_sample.tgz --out /data/athome4_sample.bin --para-in /data/athome4_sample_para.tgz --para-out /data/athome4_para_sample.bin
