@@ -96,10 +96,8 @@ cd ..
         <p><a href="https://github.com/hical/sample-dataset/blob/master/process.py"><code>process.py</code></a> is an example of how one might clean the corpus and generate excerpts. We will use the <code>athome4_sample.tgz</code> and the newly generated <code>athome4_sample_para.tgz</code> to generate document features.</p>
 
 <pre><code>
-# Create the cal docker container
-docker-compose -f HiCAL up --no-create cal
-# Access the shell from the cal container
-docker-compose -f HiCAL run cal bash
+# Build and access the shell from the cal container
+docker-compose -f HiCAL.yml run cal bash
 root@container-id:/# cd src && make corpus_parser
 # Generate features
 root@container-id:/# ./corpus_parser  --in /data/athome4_sample.tgz --out /data/athome4_sample.bin --para-in /data/athome4_sample_para.tgz --para-out /data/athome4_para_sample.bin
@@ -123,7 +121,7 @@ cp sample-dataset/functions.py HiCALWeb/hicalweb/interfaces/DocumentSnippetEngin
 DOC_BIN=/data/athome4_sample.bin PARA_BIN=/data/athome4_para_sample.bin docker-compose -f HiCAL.yml up -d
 # Visit localhost:9000
 </code></pre>
-
+        <p>If you get a <code>502 Bad Gateway</code> error, please wait few seconds while the containers finish processing.</p>
         <p>Port <code>9001</code> and <code>9000</code> will be used by system. Make sure these ports are not being used by other applications in your machine. If you would like to change these ports, please read the configuration section below.</p>
         <p>We strongly recommend installing via docker. If you would like to not use docker, please look at the documentation page for more details.</p>
         <h4>How to run</h4>
