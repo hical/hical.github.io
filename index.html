@@ -125,8 +125,8 @@ DOC_BIN=/data/athome4_sample.bin PARA_BIN=/data/athome4_para_sample.bin docker-c
         <p>Port <code>9001</code> and <code>9000</code> will be used by system. Make sure these ports are not being used by other applications in your machine. If you would like to change these ports, please read the configuration section below.</p>
         <p>We strongly recommend installing via docker. If you would like to not use docker, please look at the documentation page for more details.</p>
         <h4>How to run</h4>
-        <p>Once your docker images are up and running, open your browser to <a href="http://localhost:9000/" class="code-inline">http://localhost:9000/</a>.
-        You should be able to access system's web interface.
+        <p>Once your docker images are up and running (you can verify by running <span class="code-inline">docker-compose -f HiCAL.yml ps</span>), open your browser to <a href="http://localhost:9000/" class="code-inline">http://localhost:9000/</a>.
+        You should be able to access system's web interface. If you are still unable to view the web interface, try replacing <span class="code-inline">http://localhost</span> with the ip address of your docker machine (you can get the ip by running <span class="code-inline">docker-machine ip</span>)
         </p>
 
         <div class="row">
